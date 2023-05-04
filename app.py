@@ -122,6 +122,8 @@ def update_graph(dropdown_value, dropdown2_value):
         if dropdown2_value != None:
             if dropdown2_value == 'rule_1':
                 G = util.apply_rule1(G)
+            elif dropdown2_value == 'rule_2':
+                G = util.apply_rule2(G)
             
             # adiciona a posição de cada nó ao atributo 'pos' do nó
             pos = nx.spring_layout(G)
