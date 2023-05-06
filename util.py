@@ -49,7 +49,7 @@ def rule_2(G, x, y) -> bool:
     return False
 
 def apply_rule2(G):
-    # G = apply_rule1(G)
+    G = apply_rule1(G)
     
     is_rule_applied = True
     while(is_rule_applied):
