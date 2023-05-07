@@ -9,9 +9,11 @@ def remove_edge(G, x, y):
     
     # Adds the edges with the merged node between 
     # successor nodes
-    G.remove_node(y)
     for sucessor in successors_y:
-        G.add_edge(x, sucessor)
+        if sucessor != x:
+            G.add_edge(x, sucessor)
+
+    G.remove_node(y)
     
     # Rename node for new merged name
     mapping = {x: x}
@@ -48,9 +50,7 @@ def rule_2(G, x, y) -> bool:
     
     return False
 
-def apply_rule2(G):
-    G = apply_rule1(G)
-    
+def apply_rule2(G):    
     is_rule_applied = True
     while(is_rule_applied):
         is_rule_applied = False
@@ -134,7 +134,7 @@ def mark_inheritor_rule_3(G, x, y):
 
     return G
 
-def apply_rule_3(G):
+def apply_rule3(G):
     for (x, y) in G.edges(data=False):
         G = mark_inheritor_rule_3(G, x, y)
         
@@ -220,3 +220,33 @@ def mark_inheritor_rule_4(G, x, y):
             G.edges[x, y]['inheritor'] = True
 
     return G
+
+def apply_rule4(G):
+    for (x, y) in G.edges(data=False):
+        G = mark_inheritor_rule_3(G, x, y)
+        
+    return G
+
+def remove_inheritor_nodes(G):    
+    # Removes the heir-marked edges
+    for (x, y, z) in G.edges(data=True):
+        if z and G.edges[x, y].get('inheritor', False):
+            G = remove_edge(G, x,y)
+    
+    return G
+
+def apply_all_rules(G):
+    # Apply rule1
+    G = apply_rule1(G)
+    
+    # Apply rule2
+    G = apply_rule2(G)
+
+    # Apply rule3
+    G = apply_rule3(G)
+    
+    # Apply rule4
+    G = apply_rule4(G)
+    
+    # Remove inheritor nodes
+    G = remove_inheritor_nodes(G)

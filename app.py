@@ -36,9 +36,10 @@ app.layout = html.Div([
             id='dropdown2',
             options=[
                 {'label': 'Aplicar Regra 1', 'value': 'rule_1'},
-                {'label': 'Aplicar até Regra 2', 'value': 'rule_2'},
-                {'label': 'Aplicar até Regra 3', 'value': 'rule_3'},
-                {'label': 'Aplicar até Regra 4', 'value': 'rule_4'},
+                {'label': 'Aplicar Regra 2', 'value': 'rule_2'},
+                {'label': 'Aplicar Regra 3', 'value': 'rule_3'},
+                {'label': 'Aplicar Regra 4', 'value': 'rule_4'},
+                {'label': 'Aplicar todas Regras', 'value': 'all'},
             ],
             value=None,
             style={'position': 'absolute', 'right':'10px', 'top':'40px', 'width': '500px', 'margin': '10px', 'color': 'black', 'background-color': 'white'}
@@ -124,6 +125,14 @@ def update_graph(dropdown_value, dropdown2_value):
                 G = util.apply_rule1(G)
             elif dropdown2_value == 'rule_2':
                 G = util.apply_rule2(G)
+            elif dropdown2_value == 'rule_3':
+                G = util.apply_rule3(G)
+                G = util.remove_inheritor_nodes(G)
+            elif dropdown2_value == 'rule_4':
+                G = util.apply_rule4(G)
+                G = util.remove_inheritor_nodes(G)
+            elif dropdown2_value == 'all':
+                G = util.apply_all_rules(G)
             
             # adiciona a posição de cada nó ao atributo 'pos' do nó
             pos = nx.spring_layout(G)
