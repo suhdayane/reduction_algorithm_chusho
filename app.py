@@ -7,6 +7,7 @@ import glob
 import pydot
 import numpy as np
 import util
+import plotly.graph_objs as go
 
 # List .dot files inside ./dots path
 dots = glob.glob('./dots/*.dot')
@@ -37,8 +38,7 @@ app.layout = html.Div([
             options=[
                 {'label': 'Aplicar Regra 1', 'value': 'rule_1'},
                 {'label': 'Aplicar Regra 2', 'value': 'rule_2'},
-                {'label': 'Aplicar Regra 3', 'value': 'rule_3'},
-                {'label': 'Aplicar Regra 4', 'value': 'rule_4'},
+                {'label': 'Aplicar Regra 3 e 4', 'value': 'rule_4'},
                 {'label': 'Aplicar todas Regras', 'value': 'all'},
             ],
             value=None,
@@ -79,7 +79,7 @@ def update_graph(dropdown_value, dropdown2_value):
         for node in G.nodes:
             G.nodes[node]['pos'] = pos[node]
 
-        # plota o grafo original
+        # plota o grafo original com setas nas arestas
         trace_original = []
         for node in G.nodes:
             x, y = G.nodes[node]['pos']
@@ -92,6 +92,7 @@ def update_graph(dropdown_value, dropdown2_value):
                 text=node,
                 hoverinfo='text'
             ))
+
         for edge in G.edges:
             x0, y0 = G.nodes[edge[0]]['pos']
             x1, y1 = G.nodes[edge[1]]['pos']
@@ -100,7 +101,7 @@ def update_graph(dropdown_value, dropdown2_value):
                 x=[x0, x1, None],
                 y=[y0, y1, None],
                 mode='lines',
-                line=dict(width=5),
+                line=dict(width=5, arrowhead='triangle', arrowsize=0.5),
                 hoverinfo='none'
             ))
         fig_original = dict(data=trace_original, layout=dict(
@@ -116,21 +117,16 @@ def update_graph(dropdown_value, dropdown2_value):
                 xref="paper", yref="paper",
                 x=0.005, y=-0.002)],
             xaxis=dict(showgrid=False, zeroline=False,
-                       showticklabels=False),
+                    showticklabels=False),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
-        )
-        
+        )  
         if dropdown2_value != None:
             if dropdown2_value == 'rule_1':
                 G = util.apply_rule1(G)
             elif dropdown2_value == 'rule_2':
                 G = util.apply_rule2(G)
-            elif dropdown2_value == 'rule_3':
-                G = util.apply_rule3(G)
-                G = util.remove_inheritor_nodes(G)
             elif dropdown2_value == 'rule_4':
-                G = util.apply_rule4(G)
-                G = util.remove_inheritor_nodes(G)
+                G = util.apply_rule3_and_4(G)
             elif dropdown2_value == 'all':
                 G = util.apply_all_rules(G)
             
